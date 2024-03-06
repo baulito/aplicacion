@@ -1,0 +1,3 @@
+- Android keystore password: a833702056035db574742a93c9c200c4
+- Android key alias: e4e5356abec921011639ed186ea43d07
+- Android key password: c3ad4ed4a0d40f2b126c77d71b60718a

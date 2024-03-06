@@ -1,0 +1,30 @@
+.header2 {
+    position: fixed;
+    width: 100%;
+    display: block;
+    background: #0f2e4c;
+    z-index: 9;
+    color: #FFF;
+    height: 70px;
+  }
+  
+  .header2 .logo{
+    display: inline-block;
+    height: 50px;
+  }
+  
+  .espacioheader-simple{
+    display: block;
+    height: 70px;
+  }
+  .block{
+    width: 100%;
+  }
+  .btn-buscador{
+    background-color: #ff6600;
+    border-color: #ff6600;
+  }
+  
+  header .input{
+    color: #0f2e4c;
+  }

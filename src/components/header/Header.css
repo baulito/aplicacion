@@ -1,0 +1,259 @@
+header {
+    position: fixed;
+    width: 100%;
+    display: block;
+    background: #333;
+    height: 130px;
+    z-index: 9;
+  }
+  
+  header .btn-header{
+    background: #ffffff1a;
+    color: #fff;
+    border:0;
+  }
+  header .btn-header:hover{
+    background: #FFF;
+    color:#333 ;
+  }
+  header .navbar{
+    padding: 0;
+    min-height: 3rem;
+  }
+  header .btn-header-envio{
+    font-size: 12px;
+    text-align: left;
+    height: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header .btn-header-envio div{
+    width: 100%;
+    display: block;
+  }
+  header .btn-header-envio svg{
+    float: left;
+    margin-right: 4px;
+  }
+  header .btn-header-envio span{
+    display: block;
+    text-align: left;
+  }
+  
+  
+  header .btn-nav{
+    color: #FFF;
+    font-weight: normal;
+    text-transform: none;
+    font-size: 14px;
+  }
+  header .dropdown .btn-nav{
+    color: #333;
+  }
+  header .dropdown label{
+    color: #FFF;
+  }
+  
+  header .avatar{
+    height: 32px ;
+    width: 32px;
+    border-radius: 5em;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: baseline;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  
+  
+  
+  header .btn-header .badge{
+    background: #f00;
+    border: 0;
+    font-weight: normal;
+    font-size: 7px;
+  }
+  header .logo{
+    display: inline-block;
+    max-width: 100%;
+    max-height: 50px;
+  }
+  
+  
+  header .imagen-publicidad{
+    max-width: 45px;
+    margin-top:-20px;
+    display: inline-block;
+    background: #e6292a;
+    border-radius: 0.5em;
+  } 
+  
+  header .btn-vendeturopa{
+    display: block;
+    background: #e6292a;
+    border-radius: 0.5em;
+    margin-top:-5px;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  header .btn-vendeturopa .play{
+    float: left;
+    width: 40px;
+    height: 40px;
+    stroke: #fff;
+    margin-top: -5px;
+  }
+  header .btn-vendeturopa .camisa{
+    float: right;
+    width: 50px;
+    height: 50px;
+    stroke: #fff;
+    margin-top: -10px;
+  }
+  
+  header .btn-vendeturopa h2{
+    color:#ffcc33;
+    font-weight: 1000;
+    font-size: 13px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  header .btn-vendeturopa h3{
+    color: #fff;
+    font-size: 8px;
+    margin: 0;
+  }
+  
+  
+  .espacioheader{
+    display: block;
+    height: 130px;
+  }
+  
+  .btn-buscador{
+    background-color: #e6292a;
+    border-color: #e6292a;
+    color: #0f2e4c;
+  }
+  
+  header .input{
+    color: #0f2e4c;
+  }
+  
+  header .perfil-header{
+    width: 30px;
+    height: 30px;
+    border-radius: 5em;
+  }
+  
+  header .btn-menu{
+    color: #FFF;
+  }
+  header .btn-header{
+    margin-left: 5px;
+    vertical-align: top;
+  }
+  .botonera-opt{
+    display: table;
+    margin:0;
+    padding: 0;
+    list-style:none ;
+    width: 100%;
+    margin-left: 20px;
+  
+  }
+  .botonera-opt li{
+    display: table-cell;
+  }
+  .botonera-opt li a{
+    display: block;
+    color: #fff;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  @media (max-width: 	1280px) {
+    .botonera-opt li a{
+      font-size: 12px;
+    }
+    header .btn-vendeturopa h3 , header .btn-vendeturopa hr {
+      display: none;
+    }
+  }
+  @media (max-width: 	1024px) {
+    .botonera-opt{
+      display:block;
+      margin-left: 0px;
+      width: 200px;
+      padding: 0;
+      margin: 0;
+    }
+    .botonera-opt li{
+      display: block;
+      margin: 0;
+    }
+    .botonera-opt li a{
+      font-size: 14px;
+      color: #0f2e4c;
+      padding: 10px;
+    }
+    header .btn-vendeturopa h3 , header .btn-vendeturopa hr {
+      display: block;
+    }
+  
+  }
+  @media (max-width: 768px) { 
+  
+    header{
+      height: 150px;
+    }
+    .espacioheader{
+      height: 150px;
+    }
+    header .btn-vendeturopa{
+      padding: 5px;
+      height: 32px;
+      margin-top: 0;
+    }
+    header .btn-vendeturopa .play{
+      height: 30px;
+      width: 30px;
+    }
+    header .btn-vendeturopa .camisa{
+      height: 40px;
+      width: 40px;
+    }
+    header .btn-vendeturopa h3 , header .btn-vendeturopa hr {
+      display: none;
+    }
+  }
+  
+  
+  @media (max-width: 640px) { 
+    header{
+      padding-top: 5px;
+    }
+   
+    .navbar-2{
+      margin-top: 10px;
+    }
+  
+    header .btn-vendeturopa .camisa{
+      display: none;
+    }
+    header .btn-vendeturopa h2{
+      font-size: 13px;
+      line-height: 12px;
+    }
+  }
+  
+  @media (max-width: 500px) { 
+    header{
+      height: 140px;
+    }
+    .espacioheader{
+      height: 140px;
+    }
+  }
+  

@@ -1,0 +1,84 @@
+@import url("elements/fonts/fonts.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{
+  color-scheme: inherit;
+}
+
+body {
+  background-color: #e7f0f5; 
+  font-family: 'Poppins';
+  text-align: center;
+  width: 100%;
+  min-height: 100%;
+  color:#000;
+}
+.dropdown .dropdown-content{
+  background: #333;
+  color: #FFF;
+  font-size: 12px;
+}
+
+.dropdown .dropdown-content li {
+  padding: 0;
+  font-size: 12px;
+}
+.dropdown .dropdown-content li  span{
+  font-size: 12px;
+}
+.dropdown .dropdown-content li a {
+  font-size: 12px;
+  text-align: left;
+  color: #FFF;
+}
+
+.menu-categorias{
+  background: #FFF;
+}
+.input-disabled, .input[disabled]{
+  background:#eee;
+  border-color: #ccc;
+  color: #666;
+}
+.textarea{
+  background: #FFF;
+}
+.modal-box{
+  background: #FFF;
+}
+
+.box-categories{
+  display: block;
+  margin: 5px;
+  background: #FFF;
+  text-align: center;
+  padding: 20px;
+  border-radius: 0.5em;
+  color: #000;
+  background:#0f2e4c;
+
+}
+.box-categories div{
+  color:#ffcc33 ;
+  font-weight: bold;
+  font-size: 18px;
+  margin-top:15px;
+}
+.box-categories svg{
+  height: 80px;
+  display: inline-block;
+  -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+
+.box-categories:hover{
+  
+}
+#toast-area {
+  width: 100%;
+  position: fixed !important;
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+}
