@@ -97,12 +97,12 @@ export const Offers = () => {
                 mainState.categories && mainState.categories.length > 0 ?
                 mainState.categories?.map((datacategoria: Categoria) => {
                   return (
-                    <li className={"p-0"} key={datacategoria.store_categoria_id}>
+                    <li className={"p-0"} key={datacategoria.id}>
                       <a
                         className={"text-left"}
-                        href={"/category/" + datacategoria.store_categoria_id}
+                        href={"/category/" + datacategoria.id}
                       >
-                        {datacategoria.store_categoria_titulo}
+                        {datacategoria.name}
                       </a>
                     </li>
                   );
@@ -120,7 +120,7 @@ export const Offers = () => {
               {busqueda && busqueda?.productos && busqueda.productos.data.map((product: Product) => {
                 return (
                   <Boxproduct
-                    key={product.store_producto_id}
+                    key={product?.id}
                     producto={product}
                   />
                 );

@@ -11,7 +11,7 @@ export interface SearchParams {
 }
 
 export const searchProduct = async (params: SearchParams) => {
-  const url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+  const url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
   const endPoint = url + ProducConstants;
   try {
     let variables = "";
@@ -21,7 +21,7 @@ export const searchProduct = async (params: SearchParams) => {
       } else {
         variables = variables + "&";
       }
-      variables = variables + "categoria=" + params!.categoria;
+      variables = variables + "category=" + params!.categoria;
     }
     if (typeof params.page !== "undefined") {
       if (variables === "") {
@@ -39,21 +39,13 @@ export const searchProduct = async (params: SearchParams) => {
       }
       variables = variables + "busqueda=" + params!.busqueda;
     }
-    if (typeof params.negocio !== "undefined") {
-      if (variables === "") {
-        variables = "?";
-      } else {
-        variables = variables + "&";
-      }
-      variables = variables + "negocio=" + params!.negocio;
-    }
     if (typeof params.agotado !== "undefined") {
       if (variables === "") {
         variables = "?";
       } else {
         variables = variables + "&";
       }
-      variables = variables + "agotado=" + params!.agotado;
+      variables = variables + "out=" + params!.agotado;
     }
     if (typeof params.promocion !== "undefined") {
       if (variables === "") {
@@ -61,7 +53,7 @@ export const searchProduct = async (params: SearchParams) => {
       } else {
         variables = variables + "&";
       }
-      variables = variables + "promocion=" + params!.promocion;
+      variables = variables + "sale=" + params!.promocion;
     }
 
     const response = await httpService(endPoint, "GET",null,null, variables);

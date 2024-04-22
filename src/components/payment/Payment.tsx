@@ -32,7 +32,7 @@ export const Paymentmeacadopago = () => {
     }, [])
     useEffect(()=>{
         if(mainState.carrito){
-            const carritopagar = mainState.carrito.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === 1384);
+            const carritopagar = mainState.carrito;
             if(carritopagar?.error === 1){
                 setError(1);
             } else {

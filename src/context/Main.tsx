@@ -25,7 +25,6 @@ const INITIAL_STATE: AppContext = {
     user_id: 0,
   },
   carrito: {
-    CarritoNegocios: [],
     cantidad: 0,
   },
   isLoading: true

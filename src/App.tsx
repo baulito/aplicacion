@@ -6,12 +6,7 @@ import { InitElement } from "./components/config/InitElement";
 import { Routesgeneral } from "./Routes";
 import { Carousel, initTE } from "tw-elements";
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  ActionPerformed,
-  PushNotificationSchema,
-  PushNotifications,
-  Token,
-} from "@capacitor/push-notifications";
+//import { ActionPerformed,PushNotificationSchema,PushNotifications,Token} from "@capacitor/push-notifications";
 import { AppUpdate } from "@capawesome/capacitor-app-update";
 import { ToastContainer } from "react-toastify";
 /**
@@ -40,7 +35,7 @@ function App() {
         }
       });
       
-      PushNotifications.requestPermissions().then((result) => {
+      /*PushNotifications.requestPermissions().then((result) => {
         if (result.receive === "granted") {
           // Register with Apple / Google to receive push via APNS/FCM
           PushNotifications.register();
@@ -72,15 +67,16 @@ function App() {
         (notification: ActionPerformed) => {
           alert("Push action performed: " + JSON.stringify(notification));
         }
-      );
+      );*/
     } 
   };
 
   return (
     <GlobalProvider>
-      <InitElement />
-      <Routesgeneral />
-      <ToastContainer/>
+      <InitElement>
+          <Routesgeneral />
+          <ToastContainer/>
+      </InitElement>
     </GlobalProvider>
   );
 }

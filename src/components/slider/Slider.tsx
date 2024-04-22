@@ -7,7 +7,7 @@ export const Slider = () => {
   const [banners, setBanners] = useState<Bannernegocio[]>([]);
 
   useEffect(() => {
-    serviceBanner("1384").then((res: Bannernegocio[]) => {
+    serviceBanner().then((res: Bannernegocio[]) => {
       setBanners(res);
     });
     initTE({ Carousel });
@@ -35,7 +35,7 @@ export const Slider = () => {
                     data-te-carousel-item
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    <img src={banner.imagen} alt="" className="block w-full" />
+                    <img src={banner.image_url} alt="" className="block w-full" />
                   </div>
                 );
               } else {
@@ -46,7 +46,7 @@ export const Slider = () => {
                     data-te-carousel-item
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    <img src={banner.imagen} alt="" className="block w-full" />
+                    <img src={banner.image_url} alt="" className="block w-full" />
                   </div>
                 );
               }

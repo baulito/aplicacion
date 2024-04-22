@@ -1,7 +1,9 @@
 export interface Bannernegocio {
     id: number;
-    imagen: string;
-    negocio: number;
+    title: string;
+    image: string;
+    image_url:string;
+    oreder:number;
     created_at: Date;
     updated_at: Date;
 }
@@ -59,4 +61,16 @@ export interface Puntoventa{
     adicional: string;
     telefono1: string;
     telefono2: string;
+}
+
+export interface Campus{
+    id: number;
+    name?: string;
+    country?: string;
+    city?: string;
+    cityname?: string;
+    address?: string;
+    additional?: string;
+    phone1?: string;
+    description?: string;
 }

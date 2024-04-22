@@ -72,7 +72,7 @@ export const Paymentpse = ({publickey,banks}:any) => {
     function subirform(event: any){
         event.preventDefault();
         if (carritoglobal !== undefined) {
-            const carritopagar = carritoglobal.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === 1384);
+            const carritopagar = carritoglobal;
             if (carritopagar && carritopagar.error === 0 ) {
                 const form = (document.querySelector('form.formpaymendpse') as HTMLFormElement);
                 const data = new FormData(form);

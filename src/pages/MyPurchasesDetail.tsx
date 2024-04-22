@@ -1,27 +1,33 @@
 import { useEffect, useState } from "react";
 import { LayoutGeneral } from "../components/layout/General";
-import { useParams } from "react-router-dom";
+import { useParams,useSearchParams } from "react-router-dom";
 import { Compra } from "../models/compra";
 import { detalleCompra } from "../api/fetch-data";
+import { useGlobalContext } from "../context/Main";
 
 export const MyPurchasesDetail = () => {
   let params = useParams();
+  const [searchParams] = useSearchParams();
+  const { updateCarrito } = useGlobalContext();
+  //console.log(params);
   let idc = 0;
   if (params.id) {
     idc = parseInt(params.id);
   }
   
   let payments = '';
-  if(params.payments){
-    payments = params.payments;
+  if(searchParams.get("payments")){
+    payments = ""+searchParams.get("payments");
   }
   const [compra, setCompra] = useState<Compra>();
 
   useEffect(() => {
     detalleCompra(idc).then((res: Compra) => {
       setCompra(res);
-      if(compra?.negocio_compra_estado === 1){
+      console.log(payments);
+      if(payments === 'res' && res.negocio_compra_estado === 1 ){
           window.localStorage.removeItem("carrito");
+          updateCarrito({cantidad:0});
       }
       if (res.negocio_compra_estado === 0 || res.negocio_compra_estado === 3) {
         setTimeout(() => {

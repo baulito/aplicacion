@@ -79,8 +79,7 @@ export const ListAddress = () => {
         const carritoglobal = mainState.carrito;
         if (carritoglobal !== undefined) {
           validarCarrito(carritoglobal).then((carrito) => {
-            carritoglobal.CarritoNegocios = carrito.CarritoNegocios;
-            updateCarrito(carritoglobal);
+            updateCarrito(carrito);
             window.localStorage.setItem(
               "carrito",
               JSON.stringify(carritoglobal)

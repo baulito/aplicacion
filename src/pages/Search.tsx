@@ -8,7 +8,7 @@ import { useGlobalContext } from 'context/Main';
 export const Search = () => {
     const { mainState } = useGlobalContext();
     const [searchParams] = useSearchParams();
-    const [resultadosb, setBusqueda] = useState({categorias:[], productos:{data:[],last_page:0,current_page:0}});
+    const [resultadosb, setBusqueda] = useState({data:[],last_page:0,current_page:0});
     let params = useParams();
     let busqueda = '';
     if (params.id) {
@@ -76,12 +76,12 @@ export const Search = () => {
                         mainState.categories && mainState.categories.length > 0 ?
                         mainState.categories?.map((datacategoria: Categoria) => {
                           return (
-                            <li className={"p-0"} key={datacategoria.store_categoria_id}>
+                            <li className={"p-0"} key={datacategoria.id}>
                               <a
                                 className={"text-left"}
-                                href={"/category/" + datacategoria.store_categoria_id}
+                                href={"/category/" + datacategoria.id}
                               >
-                                {datacategoria.store_categoria_titulo}
+                                {datacategoria.name}
                               </a>
                             </li>
                           );
@@ -94,14 +94,14 @@ export const Search = () => {
                     <h1 className='titulo-principal'>Resultado Busqueda :  <span>{busqueda}</span></h1>
                     <div className={' grid grid-cols-2  lg:grid-cols-3 xl:grid-cols-4  gap-5'}>
                       {
-                        resultadosb.productos?.data.map((product:Product)=>{
+                        resultadosb?.data.map((product:Product)=>{
                            return (
-                              <Boxproduct key={product.store_producto_id} producto={product} />
+                              <Boxproduct key={product.id} producto={product} />
                            )
                         })
                       }
                     </div>
-                    <div className={"mt-10"} dangerouslySetInnerHTML={{__html:printpaginate(resultadosb.productos.last_page,resultadosb.productos.current_page)}} >
+                    <div className={"mt-10"} dangerouslySetInnerHTML={{__html:printpaginate(resultadosb.last_page,resultadosb.current_page)}} >
                         
                     </div>
                   </div>

@@ -4,7 +4,7 @@ export const loginService = async (credentials: {
   email: string;
   password: string;
 }): Promise<LoginResponse> => {
-  const url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+  const url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
   console.log(url);
   const endPoint = url + "usuarios/login";
   const settings = {

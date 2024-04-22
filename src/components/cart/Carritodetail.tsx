@@ -8,66 +8,35 @@ import { CurrentAddress } from "../address/CurrentAddress";
 
 export const Carritodetail = () => {
   const { mainState, updateCarrito, setLoading } = useGlobalContext();
-  const [carritoglobal] = useState(mainState.carrito);
+  const [carritoglobal, setcarritoglobal] = useState(mainState.carrito);
   const [tipoenvio, setTipoenvio] = useState(0);
   let total = 0;
   let valorp = 0;
   let valoru = 0;
 
   const onDeleteItem = async (itemdelete: Items, negocio: any) => {
-    let carritonegocios;
-    if (carritoglobal?.CarritoNegocios) {
-      const carritonegocio = carritoglobal?.CarritoNegocios.find(
-        (cnegocio) => cnegocio.negocio === negocio
-      );
+    let carritonegocio = carritoglobal;
       if (carritonegocio !== undefined) {
-        console.log(itemdelete);
         const result = carritonegocio.Items;
-        console.log(result);
         if (result !== undefined && result.length > 0) {
           carritonegocio.Items = [];
           let cantidadnegocio = 0;
           result.map((item) => {
-            if (
-              item.id === itemdelete.id &&
-              item.caracteristica === itemdelete.caracteristica
-            ) {
-              console.log("elimino item");
-              return true;
+            if ( item.id === itemdelete.id ) {
+                return true;
             } else {
-              carritonegocio.Items?.push(item);
-              cantidadnegocio = cantidadnegocio + item?.cantidad;
-              return true;
+                if (carritonegocio !== undefined) {
+                  carritonegocio.Items?.push(item);
+                  cantidadnegocio = cantidadnegocio + item?.cantidad;
+                }
+                return true;
             }
           });
           carritonegocio.cantidad = cantidadnegocio;
-          if (carritonegocio.Items.length > 0) {
-            carritonegocios = carritoglobal?.CarritoNegocios?.filter(
-              (cnegocio) =>
-                cnegocio.negocio === negocio
-                  ? { ...cnegocio, Items: carritonegocio.Items }
-                  : cnegocio
-            );
-          } else {
-            carritonegocios = carritoglobal?.CarritoNegocios?.filter(
-              (cnegocio) => cnegocio.negocio !== negocio
-            );
-          }
         }
-        carritoglobal.CarritoNegocios = carritonegocios;
-        let cantidad = 0;
-        if (
-          carritoglobal.CarritoNegocios &&
-          carritoglobal.CarritoNegocios?.length > 0
-        ) {
-          carritoglobal.CarritoNegocios?.map((cnegocio) => {
-            if (cnegocio.cantidad !== undefined) {
-              cantidad = cantidad + cnegocio.cantidad;
-            }
-            return true;
-          });
-        }
-        carritoglobal.cantidad = cantidad;
+        console.log(carritonegocio);
+        setcarritoglobal(carritonegocio);
+        
         try {
           await validateCart();
         } catch (error) {
@@ -80,15 +49,21 @@ export const Carritodetail = () => {
           );
         }
       }
-    }
   };
   const validateCart = async () => {
     try {
       if (carritoglobal !== undefined) {
         const carrito = await validarCarrito(carritoglobal);
-        carritoglobal.CarritoNegocios = carrito.CarritoNegocios;
-        updateCarrito(carritoglobal);
-        window.localStorage.setItem("carrito", JSON.stringify(carritoglobal));
+        
+        if(carritoglobal !== undefined && carritoglobal?.cantidad && carritoglobal?.cantidad > 0){
+          setcarritoglobal(carrito);
+          updateCarrito(carritoglobal);
+          window.localStorage.setItem("carrito", JSON.stringify(carritoglobal));
+        } else {
+          setcarritoglobal({cantidad:0});
+          updateCarrito({cantidad:0});
+          window.localStorage.setItem("carrito", JSON.stringify({cantidad:0}));
+        }
       }
     } catch (error) {
       console.log(
@@ -120,9 +95,7 @@ export const Carritodetail = () => {
   function pagar() {
     if (carritoglobal !== undefined) {
       setLoading(true);
-      const carritopagar = carritoglobal.CarritoNegocios?.find(
-        (carritonegocio) => carritonegocio.negocio === 1384
-      );
+      const carritopagar = carritoglobal;
       if (
         carritopagar &&
         carritopagar.error === 0 &&
@@ -137,7 +110,6 @@ export const Carritodetail = () => {
             async (res: any) => {
               console.log(res);
               if (res.id && res.id > 0) {
-               
                 if (res.url !== null) {
                   if (
                     navigator.userAgent.match(/Android/i) ||
@@ -211,18 +183,8 @@ export const Carritodetail = () => {
     <div className={"caja-carrito shadow-xl"}>
       <h1>Carrito</h1>
       <div>
-        {carritoglobal !== undefined
-          ? carritoglobal.CarritoNegocios?.map((cnegocio) => {
-              valorp = 0;
-              total = 0;
-              return (
-                <div key={"carrito_" + cnegocio.infonegocio?.registro_id}>
-                  {carritoglobal.CarritoNegocios &&
-                  carritoglobal.CarritoNegocios.length > 1 ? (
-                    <h3>{cnegocio.infonegocio?.registro_nombre}</h3>
-                  ) : (
-                    <></>
-                  )}
+        {carritoglobal !== undefined && carritoglobal?.cantidad && carritoglobal?.cantidad > 0  ?
+                <div key={"carrito"}>
                   <div className={" titulos-carrito hidden md:block"}>
                     <div
                       className={
@@ -243,7 +205,7 @@ export const Carritodetail = () => {
                       </div>
                     </div>
                   </div>
-                  {cnegocio.Items?.map((item) => {
+                  {carritoglobal.Items?.map((item) => {
                     valoru = 0;
                     if (item.valor && item.valor > 0) {
                       valoru = item.valor;
@@ -260,7 +222,7 @@ export const Carritodetail = () => {
                           <div className="col-span-3 md:col-span-1 text-left ">
                             <button
                               onClick={() =>
-                                onDeleteItem(item, cnegocio?.negocio)
+                                onDeleteItem(item,0)
                               }
                               className={
                                 "btn  btn-sm md:btn-md btn-circle  btn-error"
@@ -347,8 +309,8 @@ export const Carritodetail = () => {
                     </div>
                     <div className={"text-right"}>
                       $
-                      {cnegocio?.valorenvio !== undefined && tipoenvio !== 1
-                        ? cnegocio?.valorenvio.toLocaleString("en-us", {
+                      {carritoglobal?.valorenvio !== undefined && tipoenvio !== 1
+                        ? carritoglobal?.valorenvio.toLocaleString("en-us", {
                             minimumFractionDigits: 0,
                           })
                         : 0}
@@ -360,8 +322,8 @@ export const Carritodetail = () => {
                     </div>
                     <div className={"text-right"}>
                       $
-                      {cnegocio.valorenvio !== undefined && tipoenvio !== 1
-                        ? (total + cnegocio.valorenvio).toLocaleString(
+                      {carritoglobal.valorenvio !== undefined && tipoenvio !== 1
+                        ? (total + carritoglobal.valorenvio).toLocaleString(
                             "en-us",
                             { minimumFractionDigits: 0 }
                           )
@@ -374,7 +336,7 @@ export const Carritodetail = () => {
                   <hr />
                   <br />
                   <div>
-                    {cnegocio.tipoenvio !== 2 ? (
+                    {carritoglobal.tipoenvio && carritoglobal.tipoenvio !== 2 ? (
                       <div>
                         <h2>Tipo de Envío</h2>
                         <div className="grid  grid-cols-1  md:grid-cols-2 gap-4">
@@ -506,17 +468,17 @@ export const Carritodetail = () => {
                         <strong>Tienda:</strong>{" "}
                         <span
                           dangerouslySetInnerHTML={{
-                            __html: "" + cnegocio.puntoventa?.nombre,
+                            __html: "" + carritoglobal.campus?.name,
                           }}
                         ></span>
                       </div>
                       <div>
                         <strong>Ubicación:</strong>{" "}
-                        {cnegocio.puntoventa?.direccion}
+                        {carritoglobal.campus?.address}
                       </div>
                       <div>
                         <strong>Ciudad:</strong>{" "}
-                        {cnegocio.puntoventa?.ciudadnombre}
+                        {carritoglobal.campus?.cityname}
                       </div>
                       </div>
                     </div>
@@ -525,7 +487,7 @@ export const Carritodetail = () => {
                       <CurrentAddress />
                     </div>
                   )}
-                  {cnegocio.sindireccion === 1 && tipoenvio !== 1 ? (
+                  {carritoglobal.sindireccion === 1 && tipoenvio !== 1 ? (
                     <div>
                       <br />
                       <div className="alert alert-error text-center">
@@ -539,19 +501,19 @@ export const Carritodetail = () => {
                   )}
 
                   <br />
+                  {carritoglobal.error  !== 1 ?
                   <div className="text-right">
                     <button className="btn btn-succes" onClick={pagar}>
                       Ir a Pagar
                     </button>
                   </div>
+                  : ""}
                 </div>
-              );
-            })
           : ""}
         <input type="hidden" id="proceso-pago" value="1" />
       </div>
 
-      {carritoglobal !== undefined && carritoglobal.cantidad == 0 ? (
+      {carritoglobal !== undefined && carritoglobal.cantidad === 0 ? (
         <div>
           <div>No tienes productos agregados a tu carrito</div>
           <br />

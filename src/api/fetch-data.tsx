@@ -1,9 +1,8 @@
-import type { Carrito, CarritoNegocios } from "../models/carrito";
+import type { Carrito} from "../models/carrito";
 import { Capacitor } from '@capacitor/core';
 import { getToken } from "../utils/token.util";
-const url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+const url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
 //const url = "https://apitesting.togroow.com/api/";
-
 
 export const apiService = async (datos: { categoria?: number, negocio?: number, page?: number, busqueda?: string, agotado?: number, promocion?: number }) => {
     try {
@@ -14,7 +13,7 @@ export const apiService = async (datos: { categoria?: number, negocio?: number, 
             } else {
                 variables = variables + "&";
             }
-            variables = variables + "categoria=" + datos!.categoria;
+            variables = variables + "category=" + datos!.categoria;
         }
         if (typeof datos.page !== "undefined") {
             if (variables === '') {
@@ -30,15 +29,7 @@ export const apiService = async (datos: { categoria?: number, negocio?: number, 
             } else {
                 variables = variables + "&";
             }
-            variables = variables + "busqueda=" + datos!.busqueda;
-        }
-        if (typeof datos.negocio !== "undefined") {
-            if (variables === '') {
-                variables = "?";
-            } else {
-                variables = variables + "&";
-            }
-            variables = variables + "negocio=" + datos!.negocio;
+            variables = variables + "search=" + datos!.busqueda;
         }
         if (typeof datos.agotado !== "undefined") {
             if (variables === '') {
@@ -46,7 +37,7 @@ export const apiService = async (datos: { categoria?: number, negocio?: number, 
             } else {
                 variables = variables + "&";
             }
-            variables = variables + "agotado=" + datos!.agotado;
+            variables = variables + "out=" + datos!.agotado;
         }
         if (typeof datos.promocion !== "undefined") {
             if (variables === '') {
@@ -54,9 +45,9 @@ export const apiService = async (datos: { categoria?: number, negocio?: number, 
             } else {
                 variables = variables + "&";
             }
-            variables = variables + "promocion=" + datos!.promocion;
-        }
-        const baseAPI = url + 'togroow/products/search' + variables;
+            variables = variables + "sale=" + datos!.promocion;
+        } 
+        const baseAPI = url + 'product' + variables;
         const data = await fetch(baseAPI, {
             method: 'GET',
         });
@@ -69,7 +60,7 @@ export const apiService = async (datos: { categoria?: number, negocio?: number, 
 export const getProducto = async (id = 0) => {
     try {
         console.log(id);
-        const baseAPI = url + 'togroow/productos/detail/' + id;
+        const baseAPI = url + 'product/detail/' + id;
         const data = await fetch(baseAPI, {
             method: 'GET',
         });
@@ -79,8 +70,8 @@ export const getProducto = async (id = 0) => {
         return null
     }
 }
-export const serviceBanner = async (id?: string) => {
-    const endPoint = url + 'negocios/banners/' + id;
+export const serviceBanner = async () => {
+    const endPoint = url + 'banner';
     const data = await fetch(endPoint, {
         method: 'GET',
     });
@@ -102,7 +93,7 @@ export const getCiudades = async () => {
 }
 
 export const getCategorias = async () => {
-    const endPoint = url + 'togroow/products/category?negocio=1384';
+    const endPoint = url + 'categories';
     const settings = {
         method: 'GET',
         headers: {
@@ -120,15 +111,18 @@ export const validarCarrito = async (carrito: Carrito) => {
     const token = getToken();
     const post = {carrito :carrito}
     if (token !== '') {
-        const settings = {
+        var settings = {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + token
+                Authorization: "",
             },
             body: JSON.stringify(post)
         };
+        if (token && token !== "" && settings?.headers) {
+            settings.headers["Authorization"] += `Bearer ${token}`;
+          }
         try {
             const data = await fetch(endPoint, settings);
             const res = await data.json();
@@ -145,12 +139,11 @@ export const validarCarrito = async (carrito: Carrito) => {
 }
 
 
-export const pagarCompra = async (carriton:CarritoNegocios,opcionespago:{}) => {
+export const pagarCompra = async (carrito:Carrito,opcionespago:{}) => {
     const endPoint = url + 'compra/checkoutpagar';
-    const token = getToken(); 
-    
+    const token = getToken();
     const body:any = {};
-    body['carrito'] = carriton;
+    body['carrito'] = carrito;
     body['opcionespago'] = opcionespago;
     body['pagodesde'] = Capacitor.isNativePlatform() ? 1: 0;
     

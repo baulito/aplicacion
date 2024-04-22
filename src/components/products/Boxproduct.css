@@ -43,14 +43,22 @@ box-shadow: 0 0 8px 0 rgba(0,0,0,0.3);*/
 
 .valor-producto{
     font-weight: 600;
-    font-size: 14px;
+    font-size: 17px;
     color: #00CCFF;
-    display: block;
+    display: inline-block;
     font-weight: 600;
     padding-bottom: 5px;
-    text-align: left;
+    text-align: center;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.valor-antes{
+    font-size: 10px;
+    color: red;
+    text-decoration: line-through;
+    display: inline-block;
+    vertical-align: text-top;
 }
 
 

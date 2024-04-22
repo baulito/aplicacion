@@ -1,3 +1,4 @@
+import  { ReactNode } from "react";
 import { useEffect } from "react";
 import { useGlobalContext } from "../../context/Main";
 import { getCategorias, getCiudades } from "../../api/fetch-data";
@@ -6,8 +7,12 @@ import { Carrito } from "../../models/carrito";
 import Loader from "components/loader/Loader";
 import { Categories } from "../../models/product";
 
-export function InitElement() {
-  const { loginUser, updateCarrito, setCities,setLoading, setCategories} = useGlobalContext();
+interface Props {
+  children?: ReactNode;
+}
+export function InitElement({ children }: Props) {
+
+  const { mainState ,loginUser, updateCarrito, setCities,setLoading, setCategories} = useGlobalContext();
 
   const getCities = async () => {
     const cities = await getCiudades();
@@ -15,8 +20,9 @@ export function InitElement() {
   }
   const getCategories = async () => {
     const categories = await getCategorias();
-    if(categories.categorias){
-      setCategories(categories.categorias);
+    //console.log(categories);
+    if(categories){
+      setCategories(categories);
     }
   }
 
@@ -35,7 +41,7 @@ export function InitElement() {
     let carritog: Carrito;
     if (carritoinfo !== null) {
       carritog = JSON.parse(carritoinfo);
-      if (carritog?.CarritoNegocios) {
+      if (carritog) {
         updateCarrito(carritog);
       } else {
         window.localStorage.removeItem("carrito");
@@ -61,7 +67,10 @@ export function InitElement() {
     getCategories();
   }, []);
 
-  return (
-    <Loader/>
-  );
+    return (
+      <>
+        <Loader/>
+        {children}
+      </>
+    );
 }

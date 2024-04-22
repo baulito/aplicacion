@@ -9,7 +9,7 @@ export const Slideproducts = ({ productos }: any) => {
                     const producto: Product = product;
                     contador++;
                     return (
-                        <div key={"boxproduct"+producto.store_producto_id} className={contador >=5 ? "hidden xl:inline-grid" : ""}>
+                        <div key={"boxproduct"+producto.id} className={contador >=5 ? "hidden xl:inline-grid" : ""}>
                             <Boxproduct producto={producto} />
                         </div>
                     );

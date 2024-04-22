@@ -16,7 +16,7 @@ export const Paymentcard = ({ publickey }: any) => {
   let valorp = 0;
   let valorpagar = 0;
   if (carritoglobal !== undefined) {
-    carritoglobal.CarritoNegocios?.map((cnegocio) => {
+      var cnegocio = carritoglobal;
       valorp = 0;
       total = 0;
       cnegocio.Items?.map((item) => {
@@ -24,8 +24,6 @@ export const Paymentcard = ({ publickey }: any) => {
           valorp = item.valor * item.cantidad;
           total = total + valorp;
         }
-        return true;
-      })
       if (cnegocio.valorenvio !== undefined) {
         valorpagar = total + cnegocio.valorenvio;
       } else {
@@ -211,7 +209,7 @@ export const Paymentcard = ({ publickey }: any) => {
 
   function irapagar() {
     if (carritoglobal !== undefined) {
-      const carritopagar = carritoglobal.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === 1384);
+      const carritopagar = carritoglobal;
       if (carritopagar && carritopagar.error === 0 ) {
         const form = (document.querySelector('form.formpaymendcard') as HTMLFormElement);
         const data = new FormData(form);
@@ -234,8 +232,7 @@ export const Paymentcard = ({ publickey }: any) => {
             if(carritoglobal !== undefined ){
               try {
                 const carrito = await validarCarrito(carritoglobal);
-                carritoglobal.CarritoNegocios = carrito.CarritoNegocios;
-                updateCarrito(carritoglobal);
+                updateCarrito(carrito);
                 window.localStorage.setItem("carrito", JSON.stringify(carritoglobal));
               }catch(error) {
                 console.log("Error al actualizar el carrito despues de un error en la creacion del token")   ;

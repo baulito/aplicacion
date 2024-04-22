@@ -4,6 +4,7 @@ import Logo from "../../elements/images/logo-blanco.png";
 import fotoperfil from "../../elements/images/perfil.jpg";
 import { ListAddress } from "../address/ListAddress";
 import { toast } from "react-toastify";
+import { Categoria } from "models/product";
 // TODO: Separar arte de logo y titulo.
 // TODO: Separar arte de logo y titulo.
 // TODO: Manejar estado de página seleccionada en navbar.
@@ -259,30 +260,18 @@ export const Header = () => {
                   tabIndex={1}
                   className=" botonera-opt max-lg:menu max-lg:menu-compact dropdown-content max-lg:mt-3 max-lg:p-2 max-lg:shadow max-lg:bg-base-100 max-lg:rounded-box max-lg:w-52"
                 >
-                  <li>
-                    <a href="/category/2970">Calzado</a>
-                  </li>
-                  <li>
-                    <a href="/category/2975">Chaquetas</a>
-                  </li>
-                  <li>
-                    <a href="/category/2977">Pantalones</a>
-                  </li>
-                  <li>
-                    <a href="/category/2973">Buzos</a>
-                  </li>
-                  <li>
-                    <a href="/category/2985">Camisetas</a>
-                  </li>
-                  <li>
-                    <a href="/category/2972">Camisas</a>
-                  </li>
-                  <li>
-                    <a href="/category/2978">Pantalonetas</a>
-                  </li>
-                  <li>
-                    <a href="/category/4573">Accesorios</a>
-                  </li>
+                  { mainState.categories && mainState.categories.length > 0  ? (
+                    <>
+                      {
+                        mainState.categories?.map((category: Categoria) => {
+                          return(
+                          <li key={"headercategory_"+category.id}>
+                            <a href={ '/category/'+category.id }>{ category.name }</a>
+                          </li>)
+                        })
+                      } 
+                  </>
+                  ) : ("") }
                 </ul>
               </div>
             </div>

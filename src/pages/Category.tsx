@@ -10,8 +10,7 @@ export const Category = () => {
   const [searchParams] = useSearchParams();
   const { mainState } = useGlobalContext();
   const [busqueda, setBusqueda] = useState({
-    categorias: [],
-    productos: { data: [], last_page: 0, current_page: 0 },
+    data: [], last_page: 0, current_page: 0 
   });
   let params = useParams();
   let categoria = 0;
@@ -107,12 +106,12 @@ export const Category = () => {
               mainState.categories && mainState.categories.length > 0 ?
               mainState.categories?.map((datacategoria: Categoria) => {
                 return (
-                  <li className={"p-0"} key={datacategoria.store_categoria_id}>
+                  <li className={"p-0"} key={datacategoria.id}>
                     <a
                       className={"text-left"}
-                      href={"/category/" + datacategoria.store_categoria_id}
+                      href={"/category/" + datacategoria.id}
                     >
-                      {datacategoria.store_categoria_titulo}
+                      {datacategoria.name}
                     </a>
                   </li>
                 );
@@ -127,11 +126,9 @@ export const Category = () => {
                 " grid grid-cols-2  lg:grid-cols-3 xl:grid-cols-4  gap-5"
               }
             >
-              {busqueda.productos?.data.map((product: Product) => {
+              {busqueda?.data.map((product: Product) => {
                 return (
-                  <Boxproduct
-                    key={product.store_producto_id}
-                    producto={product}
+                  <Boxproduct key={product?.id} producto={product}
                   />
                 );
               })}
@@ -140,8 +137,8 @@ export const Category = () => {
               className={"mt-10"}
               dangerouslySetInnerHTML={{
                 __html: printpaginate(
-                  busqueda.productos.last_page,
-                  busqueda.productos.current_page
+                  busqueda?.last_page,
+                  busqueda?.current_page
                 ),
               }}
             ></div>

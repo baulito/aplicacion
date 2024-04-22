@@ -11,7 +11,7 @@ export class AddressService {
         }
     }
     constructor(){
-        this.url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+        this.url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
     }
     
     public async save(infoEnvio: {}): Promise<any> {
@@ -37,7 +37,7 @@ export class AddressService {
 */
 
 export const saveAddress = async (dataEnvio: {}) => {
-    const url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+    const url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
     const endPoint = url + 'envio/new';
     const token = getToken();
     if (token !== '') {
@@ -57,7 +57,7 @@ export const saveAddress = async (dataEnvio: {}) => {
     }
 }
 export const updateAddress = async (dataEnvio: {}) => {
-    const url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+    const url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
     const endPoint = url + 'envio/update';
     const token = getToken();
     if (token !== '') {
@@ -77,7 +77,7 @@ export const updateAddress = async (dataEnvio: {}) => {
     }
 }
 export const deleteAddress = async (id:number) => {
-    const url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+    const url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
     const endPoint = url + 'envio/delete/'+id;
     const token = getToken();
     if (token !== '') {
@@ -98,7 +98,7 @@ export const deleteAddress = async (id:number) => {
 
 export const updateUserMainAddress = async (id: number) => {
     try {
-      const url = process.env.REACT_APP_API_URL ?? "https://api.togroow.com/api/";
+      const url = process.env.REACT_APP_API_URL ?? "https://api.baulito.co/api/";
       const endPoint = url + "envio/changeprincipal/" + id;
       const token = getToken();
       if (token !== "") {

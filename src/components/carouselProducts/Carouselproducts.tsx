@@ -14,7 +14,7 @@ export const Carouselproducts = ({
     const [productos, setProductos] = useState<Product[]>([]);
     useEffect(() => {
         apiService({ categoria, negocio, agotado }).then((res) => {
-            setProductos(res.productos.data);
+            setProductos(res.data);
         });
         initTE({ Carousel });
     }, []);

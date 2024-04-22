@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { LayoutGeneral } from '../components/layout/General';
 import { useContext, useEffect, useState } from 'react';
-import { Product,Cantidades } from "../models/product";
+import { Product } from "../models/product";
 import { getProducto, } from '../api/fetch-data';
 import { Carouselproducts } from '../components/carouselProducts/Carouselproducts';
 import { Imagesproduct } from '../components/Imagesproduct/Imagesproduct';
 import { useGlobalContext } from '../context/Main';
-import { CarritoNegocios,Items } from '../models/carrito';
+import { Carrito,Items } from '../models/carrito';
 import { Medios } from '../components/medios/Medios';
 
 export const Productdetail = () => {
@@ -15,11 +15,10 @@ export const Productdetail = () => {
     if (params.id) {
         idp = parseInt(params.id);
     }
-    const [producto, setProduct] = useState<Product>({})
+    const [producto, setProduct] = useState<Product>({value:1})
     const {mainState,updateCarrito} = useGlobalContext();
 
     const selected = (number = 0) => { 
-        console.log(number);
         if (typeof window === "object") {
             const select = (document.getElementById('catidades-producto') as HTMLSelectElement);
             if(select){
@@ -43,257 +42,125 @@ export const Productdetail = () => {
             }
         }
     }
-
-    const retornarcantidad = (cantidades:Cantidades[],valores:number[])=>{
-        let existe = 1;
-        if(cantidades.length > 0){
-            existe = 1;
-            for (let index = 0; index < cantidades.length; index++) {
-                const cantidad = cantidades[index];
-                existe = 1;
-                const valorbuscar = valores
-                for (let index2 = 0; index2 < cantidad.id_opciones.length; index2++) {
-                    const idopcion = parseInt(""+cantidad.id_opciones[index2]);
-                    if(valorbuscar.indexOf(idopcion) === -1){
-                        existe = 0;
-                    }
-                }
-                if(existe === 1){
-                    return cantidad.cantidad;
-                }
-            }
-        }
-        return 0;   
-
-    }
-
-    const cantidadProducto  = (prod:Product)=>{
-        if(prod.inventario && prod.inventario?.caracteristicas.length > 0 ){
-            const caracteristicas = prod.inventario.caracteristicas;
-            const cantidades = prod.inventario.cantidades; 
-            const values = [];
-            const opciones = [];
-            if(caracteristicas?.length > 0){
-                for (let index = 0; index < caracteristicas.length; index++) {
-                    if (typeof window === "object") {
-                        const element = (document.getElementById('opcaracteristica'+caracteristicas[index].id) as HTMLInputElement).value;
-                        values.push(parseInt(element));
-                    }
-                    opciones.push(caracteristicas[0].opciones[0].id);
-                }
-            }
-            if(values.length > 0){
-                return retornarcantidad(cantidades,values);
-            } else if(opciones.length >0){
-                return retornarcantidad(cantidades,opciones);
-            } else {
-                return 0;
-            } 
-        } else if(prod?.store_producto_cantidad  !== undefined && prod?.store_producto_cantidad > 0) {
-            return prod?.store_producto_cantidad;
-        } else {
-            return 0;
-        }
-    }
-    
-    const cantidadescarcteristicas = (prod:Product)=>{ 
-        if(prod !== undefined ){
-            if(prod.inventario && prod.inventario?.caracteristicas.length > 0 ){
-                let numero = cantidadProducto(prod);
-                if(numero !== undefined){
-                    selected(numero);
-                }
-            } else if(prod?.store_producto_cantidad  !== undefined && prod?.store_producto_cantidad > 0) {
-                selected(prod.store_producto_cantidad);
-            }
-        }
-        
-    };
     useEffect(() => {
         getProducto(idp).then((res: Product) => {
             setProduct(res);
-            setTimeout(()=>{cantidadescarcteristicas(res);},2000);
+            setTimeout(()=>selected(res.amount),1000);
             
         });
     }, []);
 
-    function productoencarro(){
-        let idcaracteristicas = '';
-        if(producto.inventario && producto.inventario.caracteristicas.length > 0){
-            const caracteristicas = producto.inventario.caracteristicas;    
-            for (let index = 0; index < caracteristicas.length; index++) {
-                if (typeof window === "object") {
-                    const element = (document.getElementById('opcaracteristica'+caracteristicas[index].id) as HTMLInputElement).value;
-                    if(idcaracteristicas === ''){
-                        idcaracteristicas = element;
-                    } else {
-                        idcaracteristicas =  idcaracteristicas+","+element;
-                    }
-                }
+    function productoencarro(){ 
+        const negocioCarrito = mainState.carrito;
+        var cantidadagregada = 0;
+        if (negocioCarrito?.Items?.find((miitem:any) => miitem.id === producto.id && (miitem.caracteristica === null || miitem.caracteristica === '' ))) {
+            const productoencarrito = negocioCarrito.Items.map((item:any) => item.id === producto.id && (item.caracteristica === null || item.caracteristica === '')  ? { ...item} : item);
+            if(productoencarrito[0]){
+                cantidadagregada =  productoencarrito[0].cantidad;
             }
-        }
-        const carritoglobal = mainState.carrito;
-        let negocioCarrito: CarritoNegocios;
-        const idnegocio = producto?.negocio?.registro_id;
-        let cantidadagregada = 0;
-        if (carritoglobal?.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === idnegocio)) {
-            const negocioCarrito2 = carritoglobal.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === idnegocio);
-            negocioCarrito = { negocio: idnegocio, Items: negocioCarrito2?.Items, infonegocio: producto?.negocio };
-            if(idcaracteristicas === ""){
-                if (negocioCarrito?.Items?.find((miitem:any) => miitem.id === producto.store_producto_id && (miitem.caracteristica === null || miitem.caracteristica === '' ))) {
-                    const productoencarrito = negocioCarrito.Items.map((item:any) => item.id === producto.store_producto_id && (item.caracteristica === null || item.caracteristica === '')  ? { ...item} : item);
-                    if(productoencarrito[0]){
-                        cantidadagregada =  productoencarrito[0].cantidad;
-                    }
-                }
-            } else {
-                if (negocioCarrito?.Items?.find((miitem:any) => miitem.id === producto.store_producto_id && miitem.caracteristica === idcaracteristicas )) {
-                    const productoencarrito = negocioCarrito.Items.map((item:any) => item.id === producto.store_producto_id && item.caracteristica === idcaracteristicas  ? { ...item} : item);
-                    console.log(productoencarrito);
-                    if(productoencarrito[0]){
-                        cantidadagregada = productoencarrito[0].cantidad;
-                    }
-                }
-            }
-           
         }
         return cantidadagregada;
-
     }
     const agregarProducto = () => {
         const cantidadagregada = productoencarro();
-        const carritoglobal = mainState.carrito;
+        //const carritoglobal = mainState.carrito;
         console.log(cantidadagregada);
-        const cantidadmaxima = cantidadProducto(producto) - cantidadagregada;
-            if(cantidadmaxima !== undefined && cantidadmaxima > 0  ){
-                let idcaracteristicas = "";
-                if(producto){
-                    if(producto.inventario && producto.inventario.caracteristicas.length > 0){
-                        const caracteristicas = producto.inventario.caracteristicas;    
-                        for (let index = 0; index < caracteristicas.length; index++) {
-                            if (typeof window === "object") {
-                                const element = (document.getElementById('opcaracteristica'+caracteristicas[index].id) as HTMLInputElement).value;
-                                if(idcaracteristicas === ''){
-                                    idcaracteristicas = element;
-                                } else {
-                                    idcaracteristicas =  idcaracteristicas+","+element;
-                                }
-                            }
-                        }
-                    }
+            if(producto && producto?.amount !== undefined ){
 
-                
+                const cantidadmaxima = producto?.amount - cantidadagregada;
+                if( cantidadmaxima > 0 ){
                     let cantidadp = parseInt((document.getElementById('catidades-producto') as HTMLInputElement ).value);
-                    if(cantidadp === undefined){
-                        cantidadp = 0;
-                    }
-                    console.log(cantidadp+" > "+cantidadmaxima);
-                    let negocioCarrito: CarritoNegocios;
-                    const idnegocio = producto?.negocio?.registro_id;
-                    if (carritoglobal?.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === idnegocio)) {
-                        const negocioCarrito2 = carritoglobal.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === idnegocio);
-                        negocioCarrito = { negocio: idnegocio, Items: negocioCarrito2?.Items, infonegocio: producto?.negocio };
-                    } else {
-                        negocioCarrito = { negocio: idnegocio, Items: [], infonegocio: producto?.negocio };
-                    }
-                    let caracteristicaitem:any;
-                    if(idcaracteristicas === ''){
-                        caracteristicaitem = null; 
-                    } else {
-                        caracteristicaitem = idcaracteristicas;
-                    }
-                    if (negocioCarrito?.Items?.find((miitem:any) => miitem.id === producto.store_producto_id && miitem.caracteristica === caracteristicaitem )) {
-                        const products = negocioCarrito.Items.map((item:any) => item.id === producto.store_producto_id && item.caracteristica === caracteristicaitem &&  (item.cantidad + cantidadp) <= cantidadmaxima  ? { ...item, cantidad: item.cantidad + 1 } : item);
-                        negocioCarrito.Items = products;
-                    }else {
-                        if (producto.store_producto_id) {
-                            const item: Items = { id: 0, cantidad: 1 };
-                            item.id = producto.store_producto_id;
-                            item.nombre = producto.store_producto_nombre;
-                            item.imagen = producto.store_producto_imagen;
-                            item.valor = producto.valores?.value;
-                            item.etiqueta = producto.valores?.etktexto;
-                            item.tienda = producto.puntoventa?.nombre;
-                            item.caracteristica = idcaracteristicas;
-                            negocioCarrito.Items?.push(item);
+                        console.log(cantidadp);
+                        if(cantidadp === undefined){
+                            cantidadp = 0;
                         }
-                    }
-
-                    let cantidad = 0;
-                    if (negocioCarrito.Items && negocioCarrito.Items?.length > 0) {
-                        negocioCarrito.Items?.map((item) => {
-                            cantidad = cantidad + item.cantidad;
-                        });
-                        negocioCarrito.cantidad = cantidad;
-                    }
-
-                    if (carritoglobal?.CarritoNegocios?.find(carritonegocio => carritonegocio.negocio === idnegocio)) {
-                        const key = carritoglobal?.CarritoNegocios?.findIndex(carritonegocio => carritonegocio.negocio === idnegocio);
-                        if(carritoglobal?.CarritoNegocios){
-                            if(carritoglobal?.CarritoNegocios[key]){
-                                carritoglobal.CarritoNegocios[key] = negocioCarrito;
-                            }
-                        }               
-                    } else {
-                        carritoglobal?.CarritoNegocios?.push(negocioCarrito);
-                    }
-                    cantidad = 0;
-                    if (carritoglobal?.CarritoNegocios && carritoglobal?.CarritoNegocios?.length > 0) {
-                        carritoglobal?.CarritoNegocios?.map((cnegocio) => {
-                            if (cnegocio.cantidad !== undefined) {
-                                cantidad = cantidad + cnegocio.cantidad;
-                            }
-                        })
-                    }
-                    if(carritoglobal !== undefined){
-                        if(carritoglobal !== undefined && carritoglobal.cantidad !== undefined && cantidad){
-                            carritoglobal!.cantidad = cantidad;
+                    let negocioCarrito =  mainState.carrito;
+                    if(negocioCarrito && negocioCarrito!==undefined){
+                        console.log("entro carrito");
+                        if(negocioCarrito.Items === undefined){
+                            negocioCarrito.Items = [];
                         }
-                        window.localStorage.setItem("carrito", JSON.stringify(carritoglobal));
-                        updateCarrito(carritoglobal);
+                        if (negocioCarrito?.Items?.find((miitem:any) => miitem.id === producto.id )) {
+                            const products = negocioCarrito.Items.map((item:any) => item.id === producto.id &&  (item.cantidad + cantidadp) <= cantidadmaxima  ? { ...item, cantidad: item.cantidad + cantidadp } : item);
+                            negocioCarrito.Items = products;
+                        }else {
+                            if (producto.id) {
+                                console.log("entro carrito");
+                                const item: Items = { id: 0, cantidad: 1 };
+                                item.id = producto.id;
+                                item.nombre = producto.name;
+                                item.imagen = producto.image_1;
+                                if(producto?.old_value && producto?.old_value > 0){
+                                    item.valor = producto?.old_value;
+                                } else {
+                                    item.valor = producto?.value;
+                                }
+                                item.tienda = producto.campusdetail?.name;
+                                console.log(item);
+                                negocioCarrito.Items?.push(item);
+                            }
+                        }
+                        let cantidad = 0;
+                        if (negocioCarrito.Items && negocioCarrito.Items?.length > 0) {
+                            negocioCarrito.Items?.map((item) => {
+                                cantidad = cantidad + item.cantidad;
+                            });
+                            negocioCarrito.cantidad = cantidad;
+                        }
+
+                        
+                        console.log("entro");
+                        window.localStorage.setItem("carrito", JSON.stringify(negocioCarrito));
+                        updateCarrito(negocioCarrito);
                     }
+                
                 }
             }
     }
 
     const comprarProducto = () => {
         agregarProducto();
-        window.location.href = "/cart"; 
+        window.location.href = "/cart";
     }
     
-
-    if (producto.store_producto_id) {       
+    if (producto.id) {       
         const imagenes = [];
-        if (producto.store_producto_imagen && producto.store_producto_imagen !== '') {
-            imagenes.push(producto.store_producto_imagen);
+        if (producto.image_1 && producto.image_1 !== '') {
+            imagenes.push(producto.image_1);
         }
-        if (producto.store_producto_imagen2 && producto.store_producto_imagen2 !== '') {
-            imagenes.push(producto.store_producto_imagen2);
+        if (producto.image_2 && producto.image_2 !== '') {
+            imagenes.push(producto.image_2);
         }
-        if (producto.store_producto_imagen3 && producto.store_producto_imagen3 !== '') {
-            imagenes.push(producto.store_producto_imagen3);
+        if (producto.image_3 && producto.image_3 !== '') {
+            imagenes.push(producto.image_3);
         }
-        if (producto.store_producto_imagen4 && producto.store_producto_imagen4 !== '') {
-            imagenes.push(producto.store_producto_imagen4);
+        if (producto.image_4 && producto.image_4 !== '') {
+            imagenes.push(producto.image_4);
         }
-        if (producto.store_producto_imagen5 && producto.store_producto_imagen5 !== '') {
-            imagenes.push(producto.store_producto_imagen5);
+        if (producto.image_5 && producto.image_5 !== '') {
+            imagenes.push(producto.image_5);
         }
-        if (producto.store_producto_imagen6 && producto.store_producto_imagen6 !== '') {
-            imagenes.push(producto.store_producto_imagen6);
+        if (producto.image_6 && producto.image_6 !== '') {
+            imagenes.push(producto.image_6);
         }
-        if (producto.store_producto_imagen7 && producto.store_producto_imagen7 !== '') {
-            imagenes.push(producto.store_producto_imagen7);
+        if (producto.image_7 && producto.image_7 !== '') {
+            imagenes.push(producto.image_7);
         }
-        if (producto.store_producto_imagen8 && producto.store_producto_imagen8 !== '') {
-            imagenes.push(producto.store_producto_imagen8);
+        if (producto.image_8 && producto.image_8 !== '') {
+            imagenes.push(producto.image_8);
         }
-        if (producto.store_producto_imagen9 && producto.store_producto_imagen9 !== '') {
-            imagenes.push(producto.store_producto_imagen9);
+        if (producto.image_9 && producto.image_9 !== '') {
+            imagenes.push(producto.image_9);
         }
+
         const fecha = new Date();
         const dias = 2; // Número de días a agregar
-        fecha.setDate(fecha.getDate() + dias);
+        fecha.setDate(fecha.getDate() + dias );
+        const dia = fecha.getDate().toString().padStart(2, '0'); // Agrega un cero si es necesario
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Sumamos 1 porque los meses empiezan desde 0
+        const año = fecha.getFullYear();
+        
+        const fechaenvio =`${dia}-${mes}-${año}`;
 
 
         
@@ -305,20 +172,18 @@ export const Productdetail = () => {
                         <div className="text-sm breadcrumbs">
                             <ul>
                                 <li><a href='/'>Inicio</a></li>
-                                <li><a href={"/category/" + producto.categoria?.store_categoria_id}>{producto.categoria?.store_categoria_titulo}</a></li>
-                                <li><a href={"/category/" + producto.subcategoria?.store_categoria_id}>{producto.subcategoria?.store_categoria_titulo}</a></li>
-                                <li><a href={"/category/" + producto.subcategoria2?.store_categoria_id}>{producto.subcategoria2?.store_categoria_titulo}</a></li>
+                                <li><a href={"/category/" + producto.categorydetail?.id}>{producto.categorydetail?.name}</a></li>
                             </ul>
                         </div>
                         <div className="detalle-producto shadow-xl">
                             <div className="grid grid-cols-1 lg:grid-cols-2 md:gap-10 p-2 md:p-5">
                                 <div className="">
                                     <div className={'block lg:hidden mb-5'}>
-                                        <h1 >{producto.store_producto_nombre}</h1>
-                                        <div className="text-left"><strong>SKU</strong> {producto.store_producto_sku} </div>
+                                        <h1 >{producto.name}</h1>
+                                        <div className="text-left"><strong>SKU</strong> {producto.sku} </div>
                                     </div>
                                     <div className="imagen-producto">
-                                       <Imagesproduct imagenes={imagenes} />
+                                        <Imagesproduct imagenes={imagenes} />
                                     </div>
                                     <div className="text-left mt-5">
                                         <span className="mr-5 font-bold">Calificación</span>
@@ -333,16 +198,16 @@ export const Productdetail = () => {
                                     <br />
                                     <div className='text-left'>
                                         <h3>Ubicacion del Producto:</h3>
-                                        <div><strong>Tienda:</strong> <span dangerouslySetInnerHTML={{__html:""+producto.puntoventa?.nombre}}></span></div>
-                                        <div><strong>Ubicación:</strong> {producto.puntoventa?.direccion}</div>
-                                        <div><strong>Ciudad:</strong> {producto.puntoventa?.ciudadnombre}</div>
+                                        <div><strong>Tienda:</strong> <span dangerouslySetInnerHTML={{__html:""+producto.campusdetail?.name}}></span></div>
+                                        <div><strong>Ubicación:</strong> {producto.campusdetail?.address}</div>
+                                        <div><strong>Ciudad:</strong> {producto.campusdetail?.cityname}</div>
                                     </div>
                                     
                                     </div>
                                 <div >
                                     <div className={'hidden lg:block'}>
-                                        <h1 >{producto.store_producto_nombre}</h1>
-                                        <div className="text-left"><strong>SKU</strong> {producto.store_producto_sku} </div>
+                                        <h1 >{producto.name}</h1>
+                                        <div className="text-left"><strong>SKU</strong> {producto.sku} </div>
                                     </div>
                                     <div className="carcteristicas">
                                         <div className=" text-left md:text-right pb-3">
@@ -357,79 +222,46 @@ export const Productdetail = () => {
                                         <hr />
                                         <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5 items-center">
                                             <div className=" text-left md:text-right font-bold"  >Estado:</div>
-                                            <div className="md:col-span-2 text-left">{producto.store_producto_nuevo !== 1 ? "Nuevo" : "Usado"}</div>
+                                            <div className="md:col-span-2 text-left">{producto.productstatus}</div>
                                         </div>
                                         <hr />
                                         <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5 items-center">
                                             <div className=" text-left md:text-right font-bold"  >Precio:</div>
                                             <div className="md:col-span-2 text-left ">
-                                                <div>{producto.valores?.valor}</div>
+                                                { producto.old_value && producto?.old_value > 0 ? 
+                                                    <div>
+                                                        <div className="valorold">$ {producto.value.toLocaleString('es-ES')}</div>
+                                                        <div className="valor">$ {producto.old_value.toLocaleString('es-ES')}</div>
+                                                    </div>
+                                                :(
+                                                    <div className="valor">$ {producto.value.toLocaleString('es-ES')}</div>
+                                                )}
                                             </div>
                                         </div>
                                         <hr />
-                                        {
-                                            producto?.inventario && producto?.inventario.cantidades.length > 0 ?
-                                                <>
-                                                    {
-                                                        producto?.inventario.caracteristicas.map((caracteristica) => {
-                                                            return (
-                                                                <>
-                                                                    <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5 items-center">
-                                                                        <div className=" text-left md:text-right font-bold"  >{caracteristica.nombre}</div>
-                                                                        <div className="md:col-span-2 text-left">
-                                                                            <select className="select select-bordered  max-w-xs" name={"opcaracteristica" + caracteristica.id} id={"opcaracteristica" + caracteristica.id} onChange={()=>cantidadescarcteristicas(producto)} >
-                                                                                {
-                                                                                    caracteristica?.opciones.map((opcion) => {
-                                                                                        return (
-                                                                                            <option value={opcion.id}>
-                                                                                                {opcion.nombre}
-                                                                                            </option>
-                                                                                        )
-
-                                                                                    })
-                                                                                }
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </>
-                                                            )
-
-                                                        })
-                                                    }
-
-                                                    {
-                                                        <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5 items-center">
-                                                            <div className=" text-left md:text-right font-bold"  >Cantidad</div>
-                                                            <div className="md:col-span-2 text-left">
-                                                                <select className="select select-bordered  max-w-xs" id={'catidades-producto'} >
-                                                                </select>
-                                                            </div>
+                                                {producto.amount && producto.amount > 1
+                                                    ?
+                                                    <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5 items-center">
+                                                        <div className=" text-left md:text-right font-bold"  >Cantidad</div>
+                                                        <div className="md:col-span-2 text-left">
+                                                            <select className="select select-bordered  max-w-xs catidades-producto" id={'catidades-producto'} >
+                                                            </select>
                                                         </div>
-                                                    }
-                                                </>
-
-                                                :
-                                                <>
-                                                    {
-                                                        producto.store_producto_cantidad && producto.store_producto_cantidad > 1
-                                                            ?
-                                                            <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5 items-center">
-                                                                <div className=" text-left md:text-right font-bold"  >Cantidad</div>
-                                                                <div className="md:col-span-2 text-left">
-                                                                    <select className="select select-bordered  max-w-xs catidades-producto" id={'catidades-producto'} >
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            :
+                                                    </div>
+                                                    :
+                                                        producto.amount && producto.amount === 1 ?
                                                             <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5">
                                                                 <div className=" text-left md:text-right font-bold">Cantidad:</div>
                                                                 <input type="hidden" id={'catidades-producto'} value="1" />
                                                                 <div className="md:col-span-2 text-left">Unica Unidad</div>
                                                             </div>
-                                                    }
-                                                </>
-                                        }  
+                                                            :
+                                                            <div className="grid sm:grid-cols-3 md:gap-5 p-2 md:p-5">
+                                                            <div className=" text-left md:text-right font-bold">Cantidad:</div>
+                                                            <div className="md:col-span-2 text-left">Agotado</div>
+                                                        </div>
+
+                                            }
                                         <div>
                                             <a className="btn btn-primary  btn-xs sm:btn-sm mt-2 md:mt-4 sm:mr-4" onClick={()=>comprarProducto()}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -466,7 +298,7 @@ export const Productdetail = () => {
                                         <div className="grid sm:grid-cols-4 md:gap-5 p-2 md:p-5 items-center">
                                             <div className="text-left font-bold"  >Entrega</div>
                                             <div className="col-span-3 text-left ">
-                                                <div>Fecha aproximada de entrega <strong>{fecha.getDate() + "-" + fecha.getMonth() + "-" + fecha.getFullYear()}</strong> <br />
+                                                <div>Fecha aproximada de entrega <strong>{fechaenvio}</strong> <br />
                                                     Los despachos a nivel nacional pueden variar uno o dos dias
                                                 </div>
                                             </div>
@@ -491,11 +323,11 @@ export const Productdetail = () => {
                                 </div>
                             </div>
                         </div>
-                        <Carouselproducts titulo="Productos Relacionados" categoria={ producto.store_producto_subcategoria2} negocio={1384} agotado={1} />
+                        <Carouselproducts titulo="Productos Relacionados" categoria={ producto?.category} agotado={1} />
                       
                         <div className="detalle-producto shadow-xl">
                             <h3>Descripcion</h3>
-                            <div className="text-justify" dangerouslySetInnerHTML={{__html:""+producto.store_producto_descripcion}} />
+                            <div className="text-justify" dangerouslySetInnerHTML={{__html:""+producto?.description}} />
 
                         </div>
                     </div>
