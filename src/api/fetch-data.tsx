@@ -105,6 +105,19 @@ export const getCategorias = async () => {
     return await data.json();
 }
 
+export const getCampuss = async () => {
+    const endPoint = url + 'campus';
+    const settings = {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+    };
+    const data = await fetch(endPoint, settings);
+    return await data.json();
+}
+
 export const validarCarrito = async (carrito: Carrito) => {
     console.log(carrito);
     const endPoint = url + 'compra/validar';

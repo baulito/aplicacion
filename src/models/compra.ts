@@ -1,3 +1,5 @@
+import { Campus } from "./business"
+
 export interface Compra {
     negocio_compra_id: number
     negocio_compra_fecha: string
@@ -27,11 +29,13 @@ export interface Compra {
     negocio_compra_url: string
     negocio_compra_mpcode: any
     negocio_compra_mipaquete: any
+    negocio_compra_tipoenvio:any
     negocio_compra_tipopago:number
     negocio_compra_urlefecty:string
     items: CompraItem[]
     infopago?:InfoPago
-    informacionenvio?:InfoEnvio
+    informacionenvio?:InfoEnvio[]
+    campus?:Campus;
   }
   
   export interface CompraItem {
@@ -59,11 +63,15 @@ export interface Compra {
   }
 
   export interface InfoEnvio {
-    pdfGuide?:[]
-    tracking?:Traking[]
+    pdfGuide?:""
+    estadoactual?:""
+    transportadora?:""
+    desde?:""
+    guide?:""
+    seguimiento?:Traking[]
   }
 
   export interface Traking {
-    updateState?: string
-    date?: string
+    fecha?: string
+    estado?: string
   }

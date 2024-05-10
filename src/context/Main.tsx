@@ -6,6 +6,7 @@ import { User } from "../models/user";
 import { Carrito } from "../models/carrito";
 import { Cities } from "../models/cities";
 import { Categories } from "models/product";
+import { Campuss } from "models/business";
 
 
 export interface ApplicationContextProps  {
@@ -15,6 +16,7 @@ export interface ApplicationContextProps  {
   setCities: (cities: Cities) => void;
   setLoading: (isLoading: boolean) => void;
   setCategories: (categories: Categories ) => void;
+  setCampuss: (campuss: Campuss) => void;
 };
 
 
@@ -64,6 +66,11 @@ export function GlobalProvider({ children }: Props) {
       dispatch({ type: ACTIONS.SET_CATEGORIES, payload: { categories } });
     }
   };
+  const setCampuss = (campuss: Campuss) => {
+    if (campuss) {
+      dispatch({ type: ACTIONS.SET_CAMPUSS, payload: { campuss } });
+    }
+  };
 
   return (
     <GlobalApplicationContext.Provider
@@ -73,7 +80,8 @@ export function GlobalProvider({ children }: Props) {
         updateCarrito,
         setCities,
         setLoading,
-        setCategories
+        setCategories,
+        setCampuss
       }}
     >
       {children}

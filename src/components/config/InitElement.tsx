@@ -1,7 +1,7 @@
 import  { ReactNode } from "react";
 import { useEffect } from "react";
 import { useGlobalContext } from "../../context/Main";
-import { getCategorias, getCiudades } from "../../api/fetch-data";
+import { getCategorias, getCiudades,getCampuss} from "../../api/fetch-data";
 import { getUser } from "../../services/user/user.service";
 import { Carrito } from "../../models/carrito";
 import Loader from "components/loader/Loader";
@@ -12,7 +12,7 @@ interface Props {
 }
 export function InitElement({ children }: Props) {
 
-  const { mainState ,loginUser, updateCarrito, setCities,setLoading, setCategories} = useGlobalContext();
+  const { mainState ,loginUser, updateCarrito, setCities,setLoading, setCategories,setCampuss} = useGlobalContext();
 
   const getCities = async () => {
     const cities = await getCiudades();
@@ -23,6 +23,14 @@ export function InitElement({ children }: Props) {
     //console.log(categories);
     if(categories){
       setCategories(categories);
+    }
+  }
+
+  const getCampus = async () => {
+    const campus = await getCampuss();
+    console.log(campus);
+    if(campus){
+      setCampuss(campus);
     }
   }
 
@@ -65,6 +73,7 @@ export function InitElement({ children }: Props) {
     }
     getCities();
     getCategories();
+    getCampus();
   }, []);
 
     return (

@@ -122,16 +122,22 @@ export const Category = () => {
           </div>
           <div className={"lg:col-span-3"}>
             <div
-              className={
-                " grid grid-cols-2  lg:grid-cols-3 xl:grid-cols-4  gap-5"
-              }
+              
             >
-              {busqueda?.data.map((product: Product) => {
-                return (
-                  <Boxproduct key={product?.id} producto={product}
-                  />
-                );
-              })}
+              {  busqueda?.data && busqueda?.data.length > 0 ?
+                <div className={
+                  " grid grid-cols-2  lg:grid-cols-3 xl:grid-cols-4  gap-5"
+                }>
+                    {busqueda?.data.map((product: Product) => {
+                      return (
+                        <Boxproduct key={product?.id} producto={product}
+                        />
+                      );
+                    })}
+                </div>
+                :
+                    <div className="alerta-products">Lo sentimos, se nos terminaron los productos de esta categoría.<br/> Muy pronto subiremos nuevos a los mejores precios</div>
+                }
             </div>
             <div
               className={"mt-10"}

@@ -23,15 +23,16 @@ export const Home = () => {
             </div>
                 <Slider />
                 <div className="  md:container mx-auto">
+                    <Carouselproducts titulo="Ultimos Productos"  agotado={1} />
                     <Carouselproducts titulo="Chaquetas" categoria={1}  agotado={1} />
                     <Carouselproducts titulo="Zapatos" categoria={2}  agotado={1} />
                     <img src={Bannerpago} alt="" style={{"width":"100%"}} className='shadow-xl' />
-                    <Carouselproducts titulo="Buzos , Hoodies y Sudaderas" categoria={3} negocio={1384} agotado={1} />
-                    <Carouselproducts titulo="Camisas" categoria={4} negocio={1384} agotado={1} />
+                    <Carouselproducts titulo="Buzos , Hoodies y Sudaderas" categoria={4}  agotado={1} />
+                    <Carouselproducts titulo="Camisas" categoria={6}  agotado={1} />
                     <Categories />
-                    <Carouselproducts titulo="Camisetas" categoria={5} negocio={1384} agotado={1} />
-                    <Carouselproducts titulo="Pantalones" categoria={6} negocio={1384} agotado={1} />
-                    <Carouselproducts titulo="Accesorios" categoria={7} negocio={1384} agotado={1} />
+                    <Carouselproducts titulo="Camisetas" categoria={5}  agotado={1} />
+                    <Carouselproducts titulo="Pantalones" categoria={3}  agotado={1} />
+                    <Carouselproducts titulo="Accesorios" categoria={9}  agotado={1} />
                 </div>
             </LayoutGeneral>
           

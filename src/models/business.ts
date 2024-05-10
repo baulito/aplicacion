@@ -73,4 +73,7 @@ export interface Campus{
     additional?: string;
     phone1?: string;
     description?: string;
+    image_url?:string;
 }
+
+export type Campuss = Campus[];

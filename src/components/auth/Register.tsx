@@ -27,9 +27,7 @@ export const Registerform = () => {
           password: form.get("password") as string,
           names: form.get("names") as string,
           lastnames: form.get("lastnames") as string,
-          phone: form.get("phone") as string,
-          city: form.get("city") as string,
-          address: form.get("address") as string,
+          phone: form.get("phone") as string
         };
         const loginres = registerService(dataForm);
         loginres.then((res) => {
@@ -45,8 +43,8 @@ export const Registerform = () => {
           } else {
             const token = res.access_token;
             window.localStorage.setItem("myToken", token);
-            const prevUrl = document.referrer;
-            if (prevUrl.indexOf(window.location.host) !== -1) {
+             const prevUrl = document.referrer;
+           if (prevUrl.indexOf(window.location.host) !== -1) {
               // Ir a la página anterior
               window.setTimeout(() => {
                 if ("referrer" in document) {
@@ -100,7 +98,9 @@ export const Registerform = () => {
               name="lastnames"
             />
           </div>
-          <div className="form-group ">
+          
+        </div>
+        <div className="form-group mb-6 mt-6">
             <label htmlFor="phone">Telefono</label>
             <input
               required
@@ -109,27 +109,6 @@ export const Registerform = () => {
               id="phone"
               name="phone"
             />
-          </div>
-          <div className="form-group ">
-            <label htmlFor="city">Ciudad</label>
-            <input
-              required
-              type="text"
-              className="input input-bordered w-full "
-              id="city"
-              name="city"
-            />
-          </div>
-        </div>
-        <div className="form-group mb-6 mt-6">
-          <label htmlFor="address">Dirección</label>
-          <input
-            required
-            type="text"
-            className="input input-bordered w-full "
-            id="address"
-            name="address"
-          />
         </div>
         <div className="form-group mb-6">
           <label htmlFor="email">Correo</label>

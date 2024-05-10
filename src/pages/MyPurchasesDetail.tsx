@@ -224,50 +224,79 @@ export const MyPurchasesDetail = () => {
                 </div>
                 <br />
 
-                <h2>Información de Envio</h2>
-                <div>
-                  <strong>Nombre: </strong>
-                  {compra.negocio_compra_nombre}
-                </div>
-                <div>
-                  <strong>Correo: </strong>
-                  {compra.negocio_compra_correo}
-                </div>
-                <div>
-                  <strong>Dirección: </strong>
-                  {compra.negocio_compra_direccion}
-                </div>
-
-                {compra.informacionenvio && compra.informacionenvio.tracking ? (
-                  <div>
-                    <br />
-                    <h2>Estado de tu envio</h2>
-                    <div className="estadoenvio">
-                      <h3>Envio en preparación</h3>
-                      <div>{datet}</div>
+                { parseInt(compra.negocio_compra_tipoenvio) !== 1 ?
+                    <div>
+                    <h2>Información de Envio</h2>
+                    <div>
+                      <strong>Nombre: </strong>
+                      {compra.negocio_compra_nombre}
                     </div>
-                    {compra.informacionenvio.tracking.map((traking) => {
-                      if (traking.updateState !== "Envío pendiente por pago") {
-                        let datet = "";
-                        if (traking.date) {
-                          let date = new Date(traking.date);
-                          datet = date.toLocaleString();
-                        }
+                    <div>
+                      <strong>Correo: </strong>
+                      {compra.negocio_compra_correo}
+                    </div>
+                    <div>
+                      <strong>Dirección: </strong>
+                      {compra.negocio_compra_direccion}
+                    </div>
+                    </div>
+                :
+                  <div>
 
-                        return (
-                          <div className="estadoenvio">
-                            <h3>{traking.updateState}</h3>
-                            <div>{datet}</div>
-                          </div>
-                        );
+                      <h2>El envío se deberá recoger en:</h2>
+                      {
+                        compra.campus ?
+                            <div>
+                                <div> <strong>Sede: </strong> { compra.campus.name }</div>
+                                <div> <strong>Dirección: </strong> { compra.campus.address }  { compra.campus.additional }</div>
+                                <div> <strong>Ciudad: </strong> { compra.campus.cityname }</div>
+                            </div>
+                        :
+                        ""
                       }
-                    })}
                   </div>
-                ) : (
-                  ""
-                )}
+                }
               </div>
             </div>
+            { parseInt(compra.negocio_compra_tipoenvio) !== 1 ?
+                <div className="text-left">
+                    <br />
+                    <h2>Estado de tu envio</h2>
+                    {compra.informacionenvio && compra.informacionenvio[0] ? (
+                      <div >
+                        
+                        { compra?.informacionenvio.map((info) => {
+                            if(info.seguimiento){
+                                return(
+                                    <div className="envio-paquete">
+                                        <div className="titulo-paquete">Paquete enviado por { info?.transportadora} desde { info?.desde}</div>
+                                        <div className="guia-paquete">No de guia: { info?.guide }</div>
+                                        <div className="grid grid-cols-4  gap-4 items-center mr-3">
+                                            { info?.seguimiento.map((traking) => {
+                                                return (
+                                                  <div className="estadoenvio">
+                                                    <h3>{traking.estado}</h3>
+                                                    <div>{traking.fecha}</div>
+                                                  </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        })}
+                      </div>
+                    ) : (
+                      <div className="envio-paquete">
+                          <div className="titulo-paquete"> Estamos alistanto tu paquete </div>
+                      </div>
+                    )}  
+                </div>
+            :
+            <div>
+              
+            </div>
+            }
           </div>
         </div>
       </LayoutGeneral>

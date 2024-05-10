@@ -37,7 +37,11 @@ export const Carouselproducts = ({
         contador = 0;
         return (
             <div className={" pl-2 pr-2 sm:pl-5 sm:pr-5 md:pl-0 md:pr-0"}>
-                <a href={"/category/"+categoria} className="subtitulos">{titulo} <span>Ver todos</span></a>
+                { categoria && categoria!=undefined?
+                    <a href={"/category/"+categoria} className="subtitulos">{titulo} <span>Ver todos</span></a>
+                :
+                    <div className="subtitulos">{titulo}</div>
+                }
                 <div
                     id={idcarousel}
                     className="relative slide-products"

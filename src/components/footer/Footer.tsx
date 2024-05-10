@@ -1,7 +1,10 @@
 import "./Footer.css";
 import Logo from "../../elements/images/logo-blanco.png";
+import { useGlobalContext } from "../../context/Main";
+import { Campus } from "models/business";
 
 export const Footer = () => {
+  const { mainState } = useGlobalContext();
   return (
     <>
       <footer className="bg-neutral-900 text-center text-white  mt-20">
@@ -167,45 +170,23 @@ export const Footer = () => {
           </div>
           <hr />
           <h4>Nuestras Sedes</h4>
-          <div className={"grid grid-cols-1 md:grid-cols-2 gap-5"}>
-            <div className={"box-sede"}>
-              <div>
-                <strong>Sede 1:</strong>Avenida Caracas #65a - 66 Local 1 - 2
-                Chapinero, Bogota
+          <div>
+            {  mainState.campuss && mainState.campuss?.length > 0 ?
+              <div className={"grid grid-cols-1 md:grid-cols-2 gap-5"}>
+              {
+                mainState.campuss?.map((cmp:any) => {
+                  return(
+                    <div className={"box-sede"}>
+                        <div>
+                          <strong>{ cmp?.name }:</strong> {cmp?.address} {cmp?.additional}
+                        </div>
+                    </div>
+                  )
+
+                })}
               </div>
-              <div>
-                <strong>Horario:</strong> Lunes a sábado de 10:00am a 6:30pm -
-                Domingos y festivos: 10:30 a 4:00pm
-              </div>
-            </div>
-            <div className={"box-sede"}>
-              <div>
-                <strong>Sede 2:</strong> Calle 66 #13 - 45 Local 5 Chapinero,
-                Bogotá
-              </div>
-              <div>
-                <strong>Horario:</strong> Lunes a sábado de 10:00am a 6:30pm -
-                Domingos y festivos: 10:30 a 4:00pm
-              </div>
-            </div>
-            <div className={"box-sede"}>
-              <div>
-                <strong>Sede 3:</strong> Ubaté Cundinamarca
-              </div>
-              <div>
-                <strong>Horario:</strong> Lunes a domingo de 10:00am a 7:00pm
-              </div>
-            </div>
-            <div className={"box-sede"}>
-              <div>
-                <strong>Sede aliada Boutique Internacional:</strong>Calle 66 12
-                13 Chapinero, Bogotá - Compra y venta de ropa de dama.
-              </div>
-              <div>
-                <strong>Horario:</strong> Lunes a sábado de 10:00am a 6:30pm -
-                Domingos y festivos: 10:30 a 4:00pm
-              </div>
-            </div>
+              : "" 
+            }
           </div>
         </div>
         <div
